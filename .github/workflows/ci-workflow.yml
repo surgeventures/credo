@@ -20,8 +20,8 @@ jobs:
     name: "[${{matrix.otp}}/${{matrix.elixir}}] CI Tests on Credo [OTP/Elixir]"
     strategy:
       matrix:
-        otp: [21.3.8, 22.3.4, 23.3.4]
-        elixir: [1.11]
+        otp: [24.2.2]
+        elixir: [1.12]
     steps:
       - uses: actions/checkout@v2
 
