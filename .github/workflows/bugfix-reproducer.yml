@@ -18,8 +18,8 @@ jobs:
     name: "Test for lib/ changes"
     strategy:
       matrix:
-        otp: [22.2]
-        elixir: [1.10.0]
+        otp: [24.2]
+        elixir: [1.16]
     steps:
       - uses: actions/checkout@v2
 
