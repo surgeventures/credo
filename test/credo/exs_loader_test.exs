@@ -50,7 +50,6 @@ defmodule Credo.ExsLoaderTest do
     """
 
     expected = {:error, {9, "syntax error before: ", "checks"}}
-
     assert expected == Credo.ExsLoader.parse(exs_string, true)
     assert expected == Credo.ExsLoader.parse(exs_string, false)
   end
