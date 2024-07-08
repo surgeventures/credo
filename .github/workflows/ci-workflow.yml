@@ -1,4 +1,8 @@
 name: "CI Tests"
+
+env:
+  ImageOS: ubuntu22
+
 on:
   push:
     branches:
@@ -9,7 +13,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on:
+      - runs-on
+      - runner=2cpu-linux-x64
+      - "run-id=${{ github.run_id }}"
     name: "[${{matrix.otp}}/${{matrix.elixir}}] CI Tests on Credo [OTP/Elixir]"
     strategy:
       matrix:

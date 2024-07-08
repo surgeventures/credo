@@ -1,4 +1,8 @@
 name: "Compatibility: Phoenix"
+
+env:
+  ImageOS: ubuntu22
+
 on:
   push:
     branches:
@@ -6,7 +10,10 @@ on:
 
 jobs:
   test_on_source:
-    runs-on: ubuntu-latest
+    runs-on:
+      - runs-on
+      - runner=2cpu-linux-x64
+      - "run-id=${{ github.run_id }}"
     name: "[${{matrix.otp}}/${{matrix.elixir}}] Phoenix ${{matrix.repo_branch}} source code analysed by Credo [OTP/Elixir]"
     strategy:
       matrix:
@@ -42,7 +49,10 @@ jobs:
         if: "!(matrix.otp == '20.3' && matrix.elixir == '1.10.0')"
 
   test_on_new_project:
-    runs-on: ubuntu-latest
+    runs-on:
+      - runs-on
+      - runner=2cpu-linux-x64
+      - "run-id=${{ github.run_id }}"
     name: "[${{matrix.otp}}/${{matrix.elixir}}] new Phoenix app analysed by Credo [OTP/Elixir]"
     strategy:
       matrix:

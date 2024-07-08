@@ -1,4 +1,8 @@
 name: "Compatibility: Elixir"
+
+env:
+  ImageOS: ubuntu22
+
 on:
   push:
     branches:
@@ -6,7 +10,10 @@ on:
 
 jobs:
   test_on_source:
-    runs-on: ubuntu-latest
+    runs-on:
+      - runs-on
+      - runner=2cpu-linux-x64
+      - "run-id=${{ github.run_id }}"
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     name: "[${{matrix.otp}}/${{matrix.elixir}}] Elixir ${{matrix.repo_branch}} source code analysed by Credo [OTP/Elixir]"
     strategy:
