@@ -1,5 +1,9 @@
 name: "Reproducing Test-Case Detector (experimental)"
 
+
+env:
+  ImageOS: ubuntu22
+
 on:
   pull_request:
     paths:
@@ -7,16 +11,19 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on:
+      - runs-on
+      - runner=2cpu-linux-x64
+      - "run-id=${{ github.run_id }}"
     name: "Test for lib/ changes"
     strategy:
       matrix:
-        otp: [22.2]
-        elixir: [1.10.0]
+        otp: [24.2.2]
+        elixir: [1.12]
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
