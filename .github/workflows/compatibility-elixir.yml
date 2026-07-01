@@ -23,6 +23,12 @@ jobs:
         repo_url: ["https://github.com/elixir-lang/elixir.git"]
         repo_branch: ["v1.12", "master"]
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.GH_FRESHAENGINEERING_STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
       - uses: erlef/setup-beam@fc68ffb90438ef2936bbb3251622353b3dcb2f93 # v1
         with:
