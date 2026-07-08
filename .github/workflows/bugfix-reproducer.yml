@@ -9,6 +9,9 @@ on:
     paths:
     - '**_test.exs'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on:
