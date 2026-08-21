@@ -1,5 +1,5 @@
 version: 1
-generated_at: 2026-06-15T13:14:41Z
+generated_at: 2026-08-21T11:39:53Z
 internal: []
 trusted:
   - action: actions/checkout
@@ -7,21 +7,6 @@ trusted:
       - ee0669bd1cc54295c223e0bb666b733df41de1c5
     occurrences:
       ee0669bd1cc54295c223e0bb666b733df41de1c5:
-        .github/workflows/bugfix-reproducer.yml:
-          - jobs.test.steps.[0].uses
-        .github/workflows/ci-workflow.yml:
-          - jobs.test.steps.[0].uses
-        .github/workflows/compatibility-elixir.yml:
-          - jobs.test_on_source.steps.[0].uses
-        .github/workflows/compatibility-phoenix.yml:
-          - jobs.test_on_source.steps.[0].uses
-          - jobs.test_on_new_project.steps.[0].uses
-external:
-  - action: erlef/setup-beam
-    refs:
-      - fc68ffb90438ef2936bbb3251622353b3dcb2f93
-    occurrences:
-      fc68ffb90438ef2936bbb3251622353b3dcb2f93:
         .github/workflows/bugfix-reproducer.yml:
           - jobs.test.steps.[1].uses
         .github/workflows/ci-workflow.yml:
@@ -31,6 +16,36 @@ external:
         .github/workflows/compatibility-phoenix.yml:
           - jobs.test_on_source.steps.[1].uses
           - jobs.test_on_new_project.steps.[1].uses
+external:
+  - action: step-security/harden-runner
+    refs:
+      - 9af89fc71515a100421586dfdb3dc9c984fbf411
+    occurrences:
+      9af89fc71515a100421586dfdb3dc9c984fbf411:
+        .github/workflows/bugfix-reproducer.yml:
+          - jobs.test.steps.[0].uses
+        .github/workflows/ci-workflow.yml:
+          - jobs.test.steps.[0].uses
+        .github/workflows/compatibility-elixir.yml:
+          - jobs.test_on_source.steps.[0].uses
+        .github/workflows/compatibility-phoenix.yml:
+          - jobs.test_on_source.steps.[0].uses
+          - jobs.test_on_new_project.steps.[0].uses
+  - action: step-security/mise-action
+    refs:
+      - 2796166110dee826668caddd4bffedae5116e7cd
+    occurrences:
+      2796166110dee826668caddd4bffedae5116e7cd:
+        .github/workflows/bugfix-reproducer.yml:
+          - jobs.test.steps.[2].uses
+        .github/workflows/ci-workflow.yml:
+          - jobs.test.steps.[2].uses
+        .github/workflows/compatibility-elixir.yml:
+          - jobs.test_on_source.steps.[2].uses
+        .github/workflows/compatibility-phoenix.yml:
+          - jobs.test_on_source.steps.[2].uses
+          - jobs.test_on_new_project.steps.[2].uses
 local: []
 docker: []
 dynamic: []
+nested_floating_deps: []
