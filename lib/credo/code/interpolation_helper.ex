@@ -70,66 +70,46 @@ defmodule Credo.Code.InterpolationHelper do
     |> Enum.reject(&is_nil/1)
   end
 
-  if Version.match?(System.version(), ">= 1.6.0-rc") do
-    #
-    # Elixir >= 1.6.0
-    #
+  #
+  # Elixir >= 1.11.0
+  #
+  defp map_interpolations(
+         {:sigil, {_line_no, _col_start, nil}, _, list, _empty_list, nil, _another_binary} =
+           token,
+         source
+       ) do
+    handle_atom_string_or_sigil(token, list, source)
+  end
 
-    defp map_interpolations(
-           {:sigil, {_line_no, _col_start, nil}, _, list, _, _sigil_start_char} = token,
-           source
-         ) do
-      handle_atom_string_or_sigil(token, list, source)
-    end
+  #
+  # Elixir >= 1.6.0
+  #
+  defp map_interpolations(
+         {:sigil, {_line_no, _col_start, nil}, _, list, _, _sigil_start_char} = token,
+         source
+       ) do
+    handle_atom_string_or_sigil(token, list, source)
+  end
 
-    defp map_interpolations(
-           {:bin_heredoc, {_line_no, _col_start, _}, _list} = token,
-           source
-         ) do
-      handle_heredoc(token, source)
-    end
+  defp map_interpolations(
+         {:bin_heredoc, {_line_no, _col_start, _}, _list} = token,
+         source
+       ) do
+    handle_heredoc(token, source)
+  end
 
-    defp map_interpolations(
-           {:bin_string, {_line_no, _col_start, _}, list} = token,
-           source
-         ) do
-      handle_atom_string_or_sigil(token, list, source)
-    end
+  defp map_interpolations(
+         {:bin_string, {_line_no, _col_start, _}, list} = token,
+         source
+       ) do
+    handle_atom_string_or_sigil(token, list, source)
+  end
 
-    defp map_interpolations(
-           {:kw_identifier_unsafe, {_line_no, _col_start, _}, list} = token,
-           source
-         ) do
-      handle_atom_string_or_sigil(token, list, source)
-    end
-  else
-    #
-    # Elixir <= 1.5.x
-    #
-
-    defp is_sigil_in_line(source, line_no) do
-      line_with_heredoc_quotes = get_line(source, line_no)
-
-      !!Regex.run(~r/("""|''')/, line_with_heredoc_quotes)
-    end
-
-    defp map_interpolations(
-           {:sigil, {_line_no, _col_start, _col_end}, _, list, _} = token,
-           source
-         ) do
-      handle_atom_string_or_sigil(token, list, source)
-    end
-
-    defp map_interpolations(
-           {:bin_string, {line_no, _col_start, _}, list} = token,
-           source
-         ) do
-      if is_sigil_in_line(source, line_no) do
-        handle_heredoc(token, source)
-      else
-        handle_atom_string_or_sigil(token, list, source)
-      end
-    end
+  defp map_interpolations(
+         {:kw_identifier_unsafe, {_line_no, _col_start, _}, list} = token,
+         source
+       ) do
+    handle_atom_string_or_sigil(token, list, source)
   end
 
   defp map_interpolations(
@@ -150,7 +130,7 @@ defmodule Credo.Code.InterpolationHelper do
 
     # TODO: this seems to be wrong. the closing """ determines the
     #       indentation, not the first line of the heredoc.
-    padding_in_first_line = determine_padding_at_start_of_line(first_line_in_heredoc)
+    padding_in_first_line = determine_heredoc_padding_at_start_of_line(first_line_in_heredoc)
 
     list
     |> find_interpolations(source)
@@ -169,7 +149,6 @@ defmodule Credo.Code.InterpolationHelper do
     {line_no, col_start, line_no_end, col_end} = Token.position(token)
 
     {line_no, col_start, line_no_end, col_end}
-    # |> IO.inspect()
 
     col_end =
       if line_no_end > line_no && col_end == 1 do
@@ -206,9 +185,6 @@ defmodule Credo.Code.InterpolationHelper do
        ) do
     {line_no, col_start, line_no_end, col_end} = Token.position(token)
 
-    {line_no, col_start, line_no_end, col_end}
-    # |> IO.inspect()
-
     col_end =
       if line_no_end > line_no && col_end == 1 do
         # This means we encountered :eol and jumped in the next line.
@@ -239,7 +215,18 @@ defmodule Credo.Code.InterpolationHelper do
     nil
   end
 
-  defp determine_padding_at_start_of_line(line, regex \\ ~r/^\s+/) do
+  if Version.match?(System.version(), ">= 1.12.0-rc") do
+    # Elixir >= 1.12.0
+    #
+    defp determine_heredoc_padding_at_start_of_line(_line), do: 0
+  else
+    # Elixir < 1.12.0
+    #
+    defp determine_heredoc_padding_at_start_of_line(line),
+      do: determine_padding_at_start_of_line(line, ~r/^\s+/)
+  end
+
+  defp determine_padding_at_start_of_line(line, regex) do
     regex
     |> Regex.run(line)
     |> List.wrap()
