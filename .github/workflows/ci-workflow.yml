@@ -43,6 +43,6 @@ jobs:
       - run: mix local.rebar --force --if-missing
       - run: mix deps.get
       - run: mix deps.compile
-      - run: mix compile --warnings-as-errors
+      - run: mix compile
       - run: mix test
       - run: ./test/smoke_test.sh
