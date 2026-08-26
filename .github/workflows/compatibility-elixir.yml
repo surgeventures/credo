@@ -37,6 +37,8 @@ jobs:
       - name: Setup mise
         uses: step-security/mise-action@2796166110dee826668caddd4bffedae5116e7cd # v4.2.0
 
+      - run: mix local.hex --force --if-missing
+      - run: mix local.rebar --force --if-missing
       - run: mix deps.get
       - run: mix deps.compile
       - run: mix compile
